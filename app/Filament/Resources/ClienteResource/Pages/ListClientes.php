@@ -19,6 +19,8 @@ class ListClientes extends ListRecords
     {
         return [
             Actions\CreateAction::make()
+            ->label('Importar')
+            ->icon('heroicon-o-arrow-up-tray')
                 ->using(function (array $data, string $model): Model {
                     $filePath = storage_path('app/public/' . urldecode($data['archivo']));
 
