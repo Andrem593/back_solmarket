@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable //implements FilamentUser
 {
     use HasFactory, Notifiable;
 
@@ -47,9 +47,9 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
-    public function canAccessPanel(Panel $panel): bool
-    {
-        // return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();  //para produccion
-        return str_ends_with($this->email, '@example.com');
-    }
+    // public function canAccessPanel(Panel $panel): bool
+    // {
+    //     // return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();  //para produccion
+    //     return str_ends_with($this->email, '@example.com');
+    // }
 }
