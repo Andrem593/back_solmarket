@@ -11,11 +11,23 @@ class ClienteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() : JsonResponse
-    {
-        $clientes = Cliente::all();
-        return response()->json($clientes);
-    }
+public function index(Request $request) : JsonResponse
+{
+    $query = Cliente::query();
+
+    $query->when($request->input('cedula'), function ($query, $cedula) {
+        $query->where('cedula', $cedula);
+    });
+
+    $query->when($request->input('nombres'), function ($query, $nombres) {
+        $query->where('nombres', 'like', '%' . $nombres . '%');
+    });
+
+    $perPage = $request->input('perPage') ?? 10;
+    $clientes = $query->paginate($perPage);
+
+    return response()->json($clientes);
+}
 
     /**
      * Show the form for creating a new resource.
@@ -30,6 +42,10 @@ class ClienteController extends Controller
      */
     public function store(Request $request) : JsonResponse
     {
+        $request->validate([
+            'cedula' => ['required', 'unique:clientes,cedula', 'digits:10']
+        ]);
+
         $cliente = Cliente::create($request->all());
         return response()->json($cliente, 201);
     }

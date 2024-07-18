@@ -11,9 +11,17 @@ class ProductoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(Request $request) : JsonResponse
     {
-        $products = Producto::all();
+        $query = Producto::query();
+        $query->when($request->input('nombre'), function ($query, $nombre) {
+            $query->where('nombre', 'like', '%' . $nombre . '%');
+        });
+        $query->when($request->input('descripcion'), function ($query, $descripcion) {
+            $query->where('descripcion', 'like', '%' . $descripcion . '%');
+        });
+        $perPage = $request->input('perPage') ?? 10;
+        $products = $query->paginate($perPage);
         return response()->json($products);
     }
 
