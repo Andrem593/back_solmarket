@@ -3,15 +3,16 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Filament\Panel;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Filament\Models\Contracts\FilamentUser;
-use Filament\Panel;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable //implements FilamentUser
+class User extends Authenticatable implements FilamentUser
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -47,9 +48,10 @@ class User extends Authenticatable //implements FilamentUser
         ];
     }
 
-    // public function canAccessPanel(Panel $panel): bool
-    // {
-    //     // return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();  //para produccion
-    //     return str_ends_with($this->email, '@example.com');
-    // }
+    public function canAccessPanel(Panel $panel): bool
+    {
+        // return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();  //para produccion
+        // return str_ends_with($this->email, '@example.com');
+        return true;
+    }
 }
