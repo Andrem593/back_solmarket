@@ -63,17 +63,28 @@ class PedidoEncabezadoController extends Controller
             "fecha" => date('Y-m-d'),
         ]);
 
-        $orderHeader = PedidoEncabezado::where('cliente_id', $request->cliente_id)->where('estado', 1)->first();
-        if($orderHeader){
-            return response()->json([
-                'success' => false,
-                'message' => 'La solicitud no puede ser procesada porque ya existe un registro de ese cliente.',
-            ], 409); // Usamos 409 Conflict en lugar de 500 Internal Server Error
-        }
+
 
         try {
 
             DB::beginTransaction();
+
+            $orderHeader = PedidoEncabezado::where('cliente_id', $request->cliente_id)->where('estado', 1)->first();
+
+            if($orderHeader){
+
+                foreach ($request->productos as $key => $detail) {
+
+                    $this->changeProductStockValue($detail['producto_id'],  $detail['cantidad'], 2);
+                }
+
+                DB::commit();
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'La solicitud no puede ser procesada porque ya existe un registro de ese cliente.',
+                ], 409); // Usamos 409 Conflict en lugar de 500 Internal Server Error
+            }
 
             $orderHeader = PedidoEncabezado::create($request->all());
 
@@ -236,7 +247,7 @@ class PedidoEncabezadoController extends Controller
 
     /**
      * Disminuye el stock
-     * type: 1 = disminuye, otro = aumenta
+     * type: 1 = disminuye, otro = 2 aumenta
      */
     public function changeProductStockValue($idProduct, $amount, $type)
     {
@@ -251,12 +262,21 @@ class PedidoEncabezadoController extends Controller
      */
     public function returnQuantityToProductStock(Request $request)
     {
-        $products = $request->productos;
+        /// Esto debe verificar si existe un Id devolver la diferencia
         try {
             DB::beginTransaction();
-            foreach ($products as $key => $product) {
-                $this->changeProductStockValue($product['producto_id'], $product['cantidad'], 2) ;
+            foreach ($request->productos as $key => $detail) {
+                $newAmount = $detail['cantidad'];
+                if ($request->id) {
+                    $orderDetailAmount = PedidoDetalle::where([
+                        ['pedido_encabezado_id', $request->id],
+                        ['producto_id', $detail['producto_id']],
+                    ])->where('estado', 1)->sum('cantidad');
+                    $newAmount -= $orderDetailAmount;
+                }
+                $this->changeProductStockValue($detail['producto_id'], $newAmount, 2);
             }
+
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();

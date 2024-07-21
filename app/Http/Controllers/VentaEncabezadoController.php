@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\PedidoDetalle;
 use App\Models\PedidoEncabezado;
 use App\Models\VentaEncabezado;
 use Illuminate\Http\Request;
@@ -44,9 +45,50 @@ class VentaEncabezadoController extends Controller
 
         // dd($request->all());
 
+        // Se deve verificar si existe un pedido guardado no puedo realizar la venta
+        // SOlo debo devolver al stock cuando cambio de cliente, pero si existe un pedido reservado, devuelvo lo que no se encuentre en ese pedido
+        // Debo de enviar el id de la venta, para que sque la diferencia al devolver, es decir los produtos iguales que se le agrgeo una cantidad debe devolver la difrencia
+
         try {
 
             DB::beginTransaction();
+
+            $orderHeaderController = new PedidoEncabezadoController ;
+
+            if($request->id){
+                $orderHeader = PedidoEncabezado::where('cliente_id', $request->cliente_id)->where('estado', 1)->first();
+                if($orderHeader){
+
+                    foreach ($request->productos  as $key => $detail) {
+                        $orderDetailAmount = PedidoDetalle::where([
+                                ['pedido_encabezado_id' , $orderHeader->id],
+                                ['producto_id' , $detail['producto_id']],
+                            ])->where('estado' , 1)->sum('cantidad');
+                        $newAmout = $detail['cantidad'] - $orderDetailAmount;
+
+                        $orderHeaderController->changeProductStockValue($detail['producto_id'],  $newAmout , 2);
+                    }
+                    DB::commit();
+
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'La solicitud no puede ser procesada porque ya existe un pedido guardado de ese cliente.',
+                    ], 409); // Usamos 409 Conflict en lugar de 500 Internal Server Error
+                }
+
+            }else{
+                foreach ($request->productos as $key => $detail) {
+
+                    $orderHeaderController->changeProductStockValue($detail['producto_id'],  $detail['cantidad'], 2);
+                }
+                DB::commit();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'La solicitud no puede ser procesada porque ya existe un pedido guardado de ese cliente.',
+                ], 409); // Usamos 409 Conflict en lugar de 500 Internal Server Error
+            }
+
+
 
             $saleHeader = VentaEncabezado::create($request->all());
 
