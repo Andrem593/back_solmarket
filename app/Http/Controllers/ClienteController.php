@@ -16,7 +16,7 @@ public function index(Request $request) : JsonResponse
     $query = Cliente::query();
 
     $query->when($request->input('cedula'), function ($query, $cedula) {
-        $query->where('cedula', $cedula);
+        $query->where('cedula', 'like', '%' . $cedula . '%');
     });
 
     $query->when($request->input('nombres'), function ($query, $nombres) {
@@ -24,7 +24,12 @@ public function index(Request $request) : JsonResponse
     });
 
     $perPage = $request->input('perPage') ?? 10;
-    $clientes = $query->paginate($perPage);
+
+    if ($perPage === 'all') {
+        $clientes = $query->get();
+    } else {
+        $clientes = $query->paginate($perPage);
+    }
 
     return response()->json($clientes);
 }
@@ -64,7 +69,7 @@ public function index(Request $request) : JsonResponse
      */
     public function edit(Cliente $id)
     {
-       
+
     }
 
     /**

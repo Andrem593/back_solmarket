@@ -21,7 +21,12 @@ class ProductoController extends Controller
             $query->where('descripcion', 'like', '%' . $descripcion . '%');
         });
         $perPage = $request->input('perPage') ?? 10;
-        $products = $query->paginate($perPage);
+
+        if($perPage === 'all'){
+            $products = $query->limit(20)->get();
+        }else{
+            $products = $query->paginate($perPage);
+        }
         return response()->json($products);
     }
 
@@ -75,7 +80,12 @@ class ProductoController extends Controller
     public function destroy($id) : JsonResponse
     {
         $product = Producto::findOrFail($id);
-        $product->delete();
+
+        //Verificar porque estaba elimiando de Forma Fisica
+        $product->estado = 0 ;
+        $product->save();
         return response()->json(null, 204);
     }
+
+
 }
