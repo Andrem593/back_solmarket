@@ -56,7 +56,29 @@ class VentaEncabezadoController extends Controller
             $orderHeaderController = new PedidoEncabezadoController ;
 
             if($request->id){
+                // $orderHeader = PedidoEncabezado::where('cliente_id', $request->cliente_id)->where('estado', 1)->first();
+                // if($orderHeader){
+
+                //     foreach ($request->productos  as $key => $detail) {
+                //         $orderDetailAmount = PedidoDetalle::where([
+                //                 ['pedido_encabezado_id' , $orderHeader->id],
+                //                 ['producto_id' , $detail['producto_id']],
+                //             ])->where('estado' , 1)->sum('cantidad');
+                //         $newAmout = $detail['cantidad'] - $orderDetailAmount;
+
+                //         $orderHeaderController->changeProductStockValue($detail['producto_id'],  $newAmout , 2);
+                //     }
+                //     DB::commit();
+
+                //     return response()->json([
+                //         'success' => false,
+                //         'message' => 'La solicitud no puede ser procesada porque ya existe un pedido guardado de ese cliente.',
+                //     ], 409); // Usamos 409 Conflict en lugar de 500 Internal Server Error
+                // }
+
+            }else{
                 $orderHeader = PedidoEncabezado::where('cliente_id', $request->cliente_id)->where('estado', 1)->first();
+
                 if($orderHeader){
 
                     foreach ($request->productos  as $key => $detail) {
@@ -76,16 +98,16 @@ class VentaEncabezadoController extends Controller
                     ], 409); // Usamos 409 Conflict en lugar de 500 Internal Server Error
                 }
 
-            }else{
-                foreach ($request->productos as $key => $detail) {
+                // foreach ($request->productos as $key => $detail) {
 
-                    $orderHeaderController->changeProductStockValue($detail['producto_id'],  $detail['cantidad'], 2);
-                }
-                DB::commit();
-                return response()->json([
-                    'success' => false,
-                    'message' => 'La solicitud no puede ser procesada porque ya existe un pedido guardado de ese cliente.',
-                ], 409); // Usamos 409 Conflict en lugar de 500 Internal Server Error
+                //     $orderHeaderController->changeProductStockValue($detail['producto_id'],  $detail['cantidad'], 2);
+                // }
+
+                // DB::commit();
+                // return response()->json([
+                //     'success' => false,
+                //     'message' => 'La solicitud no puede ser procesada porque ya existe un pedido guardado de ese cliente.',
+                // ], 409); // Usamos 409 Conflict en lugar de 500 Internal Server Error
             }
 
 
