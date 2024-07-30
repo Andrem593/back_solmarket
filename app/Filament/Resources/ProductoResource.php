@@ -34,6 +34,7 @@ class ProductoResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('stock')
                     ->required()
+                    ->numeric()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('precio')
                     ->numeric()
