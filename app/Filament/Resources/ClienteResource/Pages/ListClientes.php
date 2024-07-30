@@ -28,11 +28,13 @@ class ListClientes extends ListRecords
                         throw new \Exception("File {$filePath} does not exist");
                     }
                     $fileContent = file_get_contents($filePath);
+                    $fileContent = str_replace(chr(0), '', $fileContent);
                     $fileContent = str_replace("\r\n", "\n", $fileContent);
                     $fileContent = str_replace("\n\r", "\n", $fileContent);
                     $fileContent = str_replace("\r", "\n", $fileContent);
                     $fileContent = str_replace("\t", ",", $fileContent);
-                    $lines = explode("\n", $fileContent); // separo por salto de linea
+                    $lines = array_filter(explode("\n", $fileContent)); // separo por salto de linea y elimino lineas vacias
+                   dd($lines);
                     $data = [];
                     if (count($lines) > 0) {
                         foreach ($lines as $line) {
