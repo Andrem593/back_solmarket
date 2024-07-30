@@ -14,6 +14,7 @@ class ListProductos extends ListRecords
     {
         return [
             Actions\CreateAction::make()
+            ->label('Agregar Producto')
             ->successNotificationTitle('Producto Creado'),
         ];
     }
