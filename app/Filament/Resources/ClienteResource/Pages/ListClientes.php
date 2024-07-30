@@ -51,8 +51,7 @@ class ListClientes extends ListRecords
                         }
                     }
                     $model::insert($data);
-
-                    return $model::create($data);
+                    return  $model::all()->last();
                 }) ->successNotification(
                     Notification::make()
                          ->success()
