@@ -32,6 +32,13 @@ class ProductoResource extends Resource
                 Forms\Components\TextInput::make('descripcion')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('stock')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('precio')
+                    ->numeric()
+                    ->prefix('$')
+                    ->maxValue(42949672.95),
                 Forms\Components\Toggle::make('estado')
                     ->required()->default(true),
             ]);
@@ -45,6 +52,12 @@ class ProductoResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('descripcion')
                     ->searchable(),
+
+                Tables\Columns\TextColumn::make('stock')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('precio')
+                    ->prefix('$')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\IconColumn::make('estado')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
