@@ -34,7 +34,6 @@ class ListClientes extends ListRecords
                     $fileContent = str_replace("\r", "\n", $fileContent);
                     $fileContent = str_replace("\t", ",", $fileContent);
                     $lines = array_filter(explode("\n", $fileContent)); // separo por salto de linea y elimino lineas vacias
-                   dd($lines);
                     $data = [];
                     if (count($lines) > 0) {
                         foreach ($lines as $line) {

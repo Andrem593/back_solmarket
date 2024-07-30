@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('productos', function (Blueprint $table) {
-            $table->float('precio')->nullable();
-            $table->float('stock')->nullable();
+           
             $table->string('img')->nullable();
         });
     }

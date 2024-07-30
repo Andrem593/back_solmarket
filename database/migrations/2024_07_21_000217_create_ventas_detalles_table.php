@@ -12,11 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ventas_detalles', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('venta_encabezado_id');
-            $table->foreign('venta_encabezado_id')->references('id')->on('ventas_encabezados')->onDelete('set null');
-            $table->integer('producto_id');
-            $table->foreign('producto_id')->references('id')->on('productos')->onDelete('set null');
+            $table->id();
+            $table->foreignId('venta_encabezado_id')->constrained('ventas_encabezados');
+            $table->foreignId('producto_id')->constrained('productos');
             $table->integer('cantidad');
             $table->float('precio');
             $table->float('total');

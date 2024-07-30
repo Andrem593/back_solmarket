@@ -12,11 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pedidos_encabezados', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-            $table->integer('cliente_id');
-            $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete('set null');
+            $table->id();
+            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('cliente_id')->constrained('clientes');
             $table->float('saldo_actual');
             $table->float('saldo');
             $table->float('subtotal');
