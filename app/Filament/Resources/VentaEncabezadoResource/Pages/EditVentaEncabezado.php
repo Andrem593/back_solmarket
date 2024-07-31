@@ -10,10 +10,5 @@ class EditVentaEncabezado extends EditRecord
 {
     protected static string $resource = VentaEncabezadoResource::class;
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            Actions\DeleteAction::make(),
-        ];
-    }
+   
 }

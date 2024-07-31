@@ -23,6 +23,8 @@ return new class extends Migration
             $table->date('fecha');
             $table->integer('estado')->default(1);
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

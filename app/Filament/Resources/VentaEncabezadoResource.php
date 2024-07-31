@@ -9,11 +9,13 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\VentaEncabezado;
 use Filament\Resources\Resource;
+use Filament\Resources\Pages\Page;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use Filament\Pages\SubNavigationPosition;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\VentaEncabezadoResource\Pages;
 
@@ -36,6 +38,7 @@ class VentaEncabezadoResource extends Resource
         return 'Ventas';
     }
 
+    protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::End;
 
 
     public static function form(Form $form): Form
@@ -148,7 +151,17 @@ class VentaEncabezadoResource extends Resource
         return [
             'index' => Pages\ListVentaEncabezados::route('/'),
             // 'create' => Pages\CreateVentaEncabezado::route('/create'),
-            // 'edit' => Pages\EditVentaEncabezado::route('/{record}/edit'),
+            'edit' => Pages\EditVentaEncabezado::route('/{record}/edit'),
+            // 'detalle' => Pages\ManageListDetalleVentas::route('/{record}/detalle'),
         ];
+    }
+
+    public static function getRecordSubNavigation(Page $page): array
+    {
+        return $page->generateNavigationItems([
+            // ...
+            Pages\EditVentaEncabezado::class,
+            // Pages\ManageListDetalleVentas::class,
+        ]);
     }
 }
