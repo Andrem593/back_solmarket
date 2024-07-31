@@ -26,9 +26,15 @@ public function index(Request $request) : JsonResponse
     $perPage = $request->input('perPage') ?? 10;
 
     if ($perPage === 'all') {
-        $clientes = $query->get();
+        $clientes = $query
+        ->orderBy('valor', 'desc')
+        ->limit(30)
+        ->get();
     } else {
-        $clientes = $query->paginate($perPage);
+        $clientes = $query
+        ->orderBy('valor', 'desc')
+        ->limit(30)
+        ->paginate($perPage);
     }
 
     return response()->json($clientes);
