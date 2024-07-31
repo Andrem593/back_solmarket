@@ -10,6 +10,8 @@ use Filament\Notifications\Notification;
 use App\Filament\Imports\ClienteImporter;
 use Filament\Resources\Pages\ListRecords;
 use App\Filament\Resources\ClienteResource;
+use App\Models\Cliente;
+use App\Models\Transaccion;
 
 class ListClientes extends ListRecords
 {
@@ -28,25 +30,40 @@ class ListClientes extends ListRecords
                         throw new \Exception("File {$filePath} does not exist");
                     }
                     $fileContent = file_get_contents($filePath);
-                    $fileContent = str_replace(chr(0), '', $fileContent);
-                    $fileContent = str_replace("\r\n", "\n", $fileContent);
-                    $fileContent = str_replace("\n\r", "\n", $fileContent);
-                    $fileContent = str_replace("\r", "\n", $fileContent);
-                    $fileContent = str_replace("\t", ",", $fileContent);
-                    $lines = array_filter(explode("\n", $fileContent)); // separo por salto de linea y elimino lineas vacias
+                    $lines = explode("\n", $fileContent);
                     $data = [];
                     if (count($lines) > 0) {
-                        foreach ($lines as $line) {
-                            $info = explode(',', $line);
-                            if (count($info) > 1) {
-                                $data[] = [
-                                    'cedula' => $info[1],
-                                    'nombres' => $info[10],
-                                    'valor' => $info[3],
-                                    'estado' => 1,
-                                    'created_at' => now(),
-                                    'updated_at' => now(),
-                                ];
+                        foreach ($lines as $key => $line) {
+                            // Quitar comas y comillas de cada línea
+                            $info = str_replace(['"'], '', $line);
+                            $info = explode(';', $info);
+                            if (count($info) > 1 && $key > 0) {
+                                if ($info[3] == 'C') {
+                                    $info[2] = str_replace(' ', '', $info[2]);
+                                    preg_match('/-(\d+)/', $info[2], $matches);
+                                    if (isset($matches[1])) {
+                                        $cedula = $matches[1];
+                                        $cedula = str_replace(' ', '', $cedula);
+                                        $cliente = Cliente::where('cedula', $cedula)->first();
+                                        if ($cliente) {
+                                            $transaccion = Transaccion::where('cliente_id', $cliente->id)
+                                            ->where('transaccion', $info[4])
+                                            ->first();
+                                            if (!$transaccion) {
+                                                $nuevoSaldo = floatval($info[6]) + $cliente->valor;
+                                                $cliente->update([
+                                                    'valor' => $nuevoSaldo,
+                                                ]);
+
+                                                Transaccion::create([
+                                                    'cliente_id' => $cliente->id,
+                                                    'transaccion' => $info[4],
+                                                    'valor' => $info[6],
+                                                ]);
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

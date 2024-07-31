@@ -26,8 +26,8 @@ class ClienteResource extends Resource
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('archivo')
-                    ->label('Archivo TXT')
-                    ->acceptedFileTypes(['text/plain'])
+                    ->label('Archivo CSV')
+                    ->acceptedFileTypes(['text/csv'])
                     ->required(),
             ])->columns(2);
     }
