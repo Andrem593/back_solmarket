@@ -36,7 +36,7 @@ class ListClientes extends ListRecords
                         foreach ($lines as $key => $line) {
                             // Quitar comas y comillas de cada línea
                             $info = str_replace(['"'], '', $line);
-                            $info = explode(';', $info);
+                            $info = explode(',', $info);
                             if (count($info) > 1 && $key > 0) {
                                 if ($info[3] == 'C') {
                                     $info[2] = str_replace(' ', '', $info[2]);
