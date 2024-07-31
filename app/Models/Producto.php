@@ -19,4 +19,9 @@ class Producto extends Model
         'precio',
         'estado',
     ];
+
+    public function saleDetail()
+    {
+        return $this->hasMany(VentaDetalle::class, 'producto_id')->where('estado', 1);
+    }
 }
