@@ -10,5 +10,11 @@ class EditVentaEncabezado extends EditRecord
 {
     protected static string $resource = VentaEncabezadoResource::class;
 
+    public static function getNavigationLabel(): string
+    {
+        return 'Editar ';
+    }
+
+
    
 }

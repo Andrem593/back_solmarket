@@ -60,7 +60,7 @@ class ClienteResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                Tables\Actions\EditAction::make()->label('Editar')
                     ->form([
                         Forms\Components\TextInput::make('cedula')
                             ->required()

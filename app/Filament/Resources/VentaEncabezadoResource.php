@@ -18,6 +18,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Pages\SubNavigationPosition;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\VentaEncabezadoResource\Pages;
+use App\Filament\Resources\VentaEncabezadoResource\Pages\ManageDetalleVentas;
 
 class VentaEncabezadoResource extends Resource
 {
@@ -45,35 +46,37 @@ class VentaEncabezadoResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('cliente_id')
-                    ->label('Cliente')
-                    ->options(Cliente::all()->pluck('nombres', 'id'))
-                    ->searchable(),
-                DatePicker::make('fecha')
-                    ->required(),
-                Section::make('')->schema([
-                    TextInput::make('saldo_actual')
-                        ->required()
-                        ->prefix('$')
-                        ->numeric(),
-                    TextInput::make('saldo')
-                        ->required()
-                        ->prefix('$')
-                        ->numeric(),
-                    TextInput::make('subtotal')
-                        ->required()
-                        ->prefix('$')
-                        ->numeric(),
-                    TextInput::make('iva')
-                        ->required()
-                        ->prefix('$')
-                        ->numeric(),
-                    TextInput::make('total')
-                        ->required()
-                        ->prefix('$')
-                        ->numeric(),
-                ])->columns(5),
-                Toggle::make('estado')->default(true)->label('Estado'),
+                Section::make()->schema([
+                    Select::make('cliente_id')
+                        ->label('Cliente')
+                        ->options(Cliente::all()->pluck('nombres', 'id'))
+                        ->searchable(),
+                    DatePicker::make('fecha')
+                        ->required(),
+                    Section::make('')->schema([
+                        TextInput::make('saldo_actual')
+                            ->required()
+                            ->prefix('$')
+                            ->numeric(),
+                        TextInput::make('saldo')
+                            ->required()
+                            ->prefix('$')
+                            ->numeric(),
+                        TextInput::make('subtotal')
+                            ->required()
+                            ->prefix('$')
+                            ->numeric(),
+                        TextInput::make('iva')
+                            ->required()
+                            ->prefix('$')
+                            ->numeric(),
+                        TextInput::make('total')
+                            ->required()
+                            ->prefix('$')
+                            ->numeric(),
+                    ])->columns(5),
+                    Toggle::make('estado')->default(true)->label('Estado'),
+                ])->columns(1)->columnSpanFull()
             ]);
     }
 
@@ -130,7 +133,7 @@ class VentaEncabezadoResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Editar'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -141,9 +144,7 @@ class VentaEncabezadoResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
@@ -152,7 +153,7 @@ class VentaEncabezadoResource extends Resource
             'index' => Pages\ListVentaEncabezados::route('/'),
             // 'create' => Pages\CreateVentaEncabezado::route('/create'),
             'edit' => Pages\EditVentaEncabezado::route('/{record}/edit'),
-            // 'detalle' => Pages\ManageListDetalleVentas::route('/{record}/detalle'),
+            'detalle' => Pages\ManageDetalleVentas::route('/{record}/detalle'),
         ];
     }
 
@@ -161,7 +162,7 @@ class VentaEncabezadoResource extends Resource
         return $page->generateNavigationItems([
             // ...
             Pages\EditVentaEncabezado::class,
-            // Pages\ManageListDetalleVentas::class,
+            Pages\ManageDetalleVentas::class,
         ]);
     }
 }
