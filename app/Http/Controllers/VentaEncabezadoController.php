@@ -43,8 +43,6 @@ class VentaEncabezadoController extends Controller
             "fecha" => date('Y-m-d'),
         ]);
 
-        // dd($request->all());
-
         // Se deve verificar si existe un pedido guardado no puedo realizar la venta
         // SOlo debo devolver al stock cuando cambio de cliente, pero si existe un pedido reservado, devuelvo lo que no se encuentre en ese pedido
         // Debo de enviar el id de la venta, para que sque la diferencia al devolver, es decir los produtos iguales que se le agrgeo una cantidad debe devolver la difrencia
@@ -78,16 +76,9 @@ class VentaEncabezadoController extends Controller
 
             }else{
                 $orderHeader = PedidoEncabezado::where('cliente_id', $request->cliente_id)->where('estado', 1)->first();
-
                 if($orderHeader){
-
                     foreach ($request->productos  as $key => $detail) {
-                        $orderDetailAmount = PedidoDetalle::where([
-                                ['pedido_encabezado_id' , $orderHeader->id],
-                                ['producto_id' , $detail['producto_id']],
-                            ])->where('estado' , 1)->sum('cantidad');
-                        $newAmout = $detail['cantidad'] - $orderDetailAmount;
-
+                        $newAmout = $detail['cantidad'] ;
                         $orderHeaderController->changeProductStockValue($detail['producto_id'],  $newAmout , 2);
                     }
                     DB::commit();
@@ -132,7 +123,16 @@ class VentaEncabezadoController extends Controller
 
             }else{
             }
-            $client->valor = $request->saldo ;
+
+            if(($client->valor - $request->total) < 0){
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tiene suficiente saldo el cliente.',
+                ], 409); // Usamos 409 Conflict en lugar de 500 Internal Server Error
+
+            }
+            $client->valor = $client->valor - $request->total ;
 
             $client->save();
 
