@@ -24,7 +24,7 @@ class PedidoEncabezadoController extends Controller
                 $orderHeader->nombre_completo = $orderHeader->client->nombres ;
                 $orderHeader->nombres = $orderHeader->client->nombres ;
                 $orderHeader->cedula = $orderHeader->client->cedula ;
-                $orderHeader->saldo = $orderHeader->client->valor ;
+                $orderHeader->saldo = $orderHeader->saldo ;
                 $orderHeader->total = $orderHeader->total ;
                 $orderHeader->subtotal_iva = 0 ;
                 $orderHeader->descuento = 0 ;
@@ -88,21 +88,8 @@ class PedidoEncabezadoController extends Controller
 
             $orderHeader = PedidoEncabezado::create($request->all());
 
-            // foreach ($request->productos as $key => $detail) {
-            //     $detail['pedido_encabezado_id'] = $orderHeader->id ;
-            //     dd($detail);
-            //     PedidoDetalle::create($detail);
-            //     # code...
-            // }
             $orderHeader->ordersDetails()->createMany($request->productos);
 
-            $client = Cliente::findOrFail($orderHeader->cliente_id);
-
-            //Verificar si es mayor el total consultar
-
-            $client->valor -= $orderHeader->total ;
-
-            $client->save();
 
             DB::commit();
 
@@ -169,12 +156,7 @@ class PedidoEncabezadoController extends Controller
                 }
             }
 
-            //Actualizo Valor del  saldo del Cliente
-            $client = Cliente::findOrFail($orderHeader->cliente_id);
 
-            $client->valor = $orderHeader->saldo_actual - collect($request->productos)->sum('total') ;
-
-            $client->save();
 
             //Actualizo el encabezado
             $orderHeader->user_id = $request->user_id ;
@@ -222,9 +204,6 @@ class PedidoEncabezadoController extends Controller
                 $totalRecover += $detail->total ;
             }
 
-            $client = Cliente::findOrFail($orderHeaders->cliente_id);
-            $client->valor += $totalRecover ;
-            $client->save();
 
             $orderHeaders->estado = 0 ;
             $orderHeaders->save();
@@ -252,7 +231,20 @@ class PedidoEncabezadoController extends Controller
     public function changeProductStockValue($idProduct, $amount, $type)
     {
         $product = Producto::findOrFail($idProduct);
-        $product->stock =  $type == 1 ? $product->stock - $amount : $product->stock + $amount ;
+
+        if($type == 1){
+            if(($product->stock - $amount) >= 0 ){
+                $product->stock = $product->stock - $amount ;
+            }else{
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No existe stock de este producto.',
+                ], 409);
+
+            }
+        }else{
+            $product->stock = $product->stock + $amount ;
+        }
         $product->save();
     }
 
@@ -289,4 +281,32 @@ class PedidoEncabezadoController extends Controller
 
     }
 
+
+    public function deleteDetailRequested($id, $idProduct, $amount, $type)
+    {
+        try {
+
+            DB::beginTransaction();
+
+            $orderDetail = PedidoDetalle::findOrFail($id);
+
+            $orderDetail->estado = 0 ;
+
+            $orderDetail->save();
+
+            $this->changeProductStockValue($idProduct, $amount, $type) ;
+
+            DB::commit();
+
+        } catch (\Throwable $th) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Lo sentimos, algo ha ido mal, inténtelo de nuevo más tarde.',
+            ], 500);
+        }
+
+    }
 }
