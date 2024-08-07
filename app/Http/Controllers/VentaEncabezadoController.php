@@ -104,7 +104,7 @@ class VentaEncabezadoController extends Controller
                 ], 409); // Usamos 409 Conflict en lugar de 500 Internal Server Error
 
             }
-            $client->valor = $client->valor - $request->total ;
+            $client->valor = $request->saldo ;
 
             $client->save();
 
