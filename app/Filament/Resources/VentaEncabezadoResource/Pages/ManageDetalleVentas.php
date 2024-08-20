@@ -11,6 +11,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Actions\ButtonAction;
+use Filament\Tables\Contracts\HasTable;
 
 class ManageDetalleVentas extends ManageRelatedRecords
 {
@@ -46,6 +48,12 @@ class ManageDetalleVentas extends ManageRelatedRecords
             ->headerActions([
                 // Tables\Actions\CreateAction::make(),
                 // Tables\Actions\AssociateAction::make(),
+                ButtonAction::make('print')
+                    ->label('Imprimir')
+                    ->icon('heroicon-o-printer')
+                    ->color('primary')
+                    ->action(fn (HasTable $livewire) => $this->printTable($livewire))
+
             ])
             ->actions([
                
@@ -56,5 +64,20 @@ class ManageDetalleVentas extends ManageRelatedRecords
             ->modifyQueryUsing(fn (Builder $query) => $query->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]));
+    }
+
+
+    public  function printTable($record)
+    {       
+        $id = $record->record->id;
+
+        return redirect()->route('ventas.print', ['id' => $id]);
+    }
+
+    public static function printTable2($record)
+    {       
+        $id = $record->id;
+
+        return redirect()->route('ventas.print', ['id' => $id]);
     }
 }

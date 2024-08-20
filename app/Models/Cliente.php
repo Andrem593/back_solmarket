@@ -17,6 +17,8 @@ class Cliente extends Model
         'cedula',
         'nombres',
         'valor',
+        'cpl',
+        'pabellon',
         'estado',
     ];
 }

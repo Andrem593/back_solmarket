@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
-use App\Models\PedidoDetalle;
-use App\Models\PedidoEncabezado;
-use App\Models\VentaEncabezado;
+use App\Models\VentaDetalle;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Excel;
+use App\Exports\VentasExport;
+use App\Models\PedidoDetalle;
+use App\Models\VentaEncabezado;
+use App\Models\PedidoEncabezado;
 use Illuminate\Support\Facades\DB;
 
 class VentaEncabezadoController extends Controller
@@ -151,5 +154,20 @@ class VentaEncabezadoController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function print($id)
+    {
+        $encabezado = VentaEncabezado::with('client')->find($id);
+
+        $detalle = VentaDetalle::with('product')
+        ->where('venta_encabezado_id', $id)->get();     
+        
+        return view('print', compact('encabezado', 'detalle'));
+    }
+
+    public static function reporteVenta()
+    {
+        return Excel::download(new VentasExport, 'ventas.xlsx');
     }
 }

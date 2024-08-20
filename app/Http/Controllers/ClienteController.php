@@ -20,7 +20,9 @@ public function index(Request $request) : JsonResponse
     });
 
     $query->when($request->input('nombres'), function ($query, $nombres) {
-        $query->where('nombres', 'like', '%' . $nombres . '%');
+        $query->where('nombres', 'like', '%' . $nombres . '%')
+            ->orWhere('cedula', 'like', '%' . $nombres . '%');
+
     });
 
     $perPage = $request->input('perPage') ?? 10;

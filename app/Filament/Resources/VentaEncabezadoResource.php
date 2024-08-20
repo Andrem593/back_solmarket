@@ -134,6 +134,10 @@ class VentaEncabezadoResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->label('Editar'),
+                Tables\Actions\ButtonAction::make('imprimir')
+                    ->label('Imprimir')
+                    ->icon('heroicon-o-printer')
+                    ->action(fn (VentaEncabezado $record) => ManageDetalleVentas::printTable2($record)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -153,7 +157,7 @@ class VentaEncabezadoResource extends Resource
             'index' => Pages\ListVentaEncabezados::route('/'),
             // 'create' => Pages\CreateVentaEncabezado::route('/create'),
             'edit' => Pages\EditVentaEncabezado::route('/{record}/edit'),
-            'detalle' => Pages\ManageDetalleVentas::route('/{record}/detalle'),
+            'detalle' => Pages\ManageDetalleVentas::route('/{record}/detalle'),            
         ];
     }
 

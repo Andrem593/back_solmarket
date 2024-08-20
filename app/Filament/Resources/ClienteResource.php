@@ -26,7 +26,6 @@ class ClienteResource extends Resource
             ->schema([
                 Forms\Components\FileUpload::make('archivo')
                     ->label('Archivo CSV')
-                    ->acceptedFileTypes(['text/csv'])
                     ->required(),
             ])->columns(2);
     }
@@ -40,6 +39,10 @@ class ClienteResource extends Resource
                 Tables\Columns\TextColumn::make('nombres')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('valor')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('cpl')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('pabellon')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('estado')
                     ->boolean(),
@@ -69,6 +72,12 @@ class ClienteResource extends Resource
                             ->required()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('valor')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('cpl')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('pabellon')
                             ->required()
                             ->maxLength(255),
                         Forms\Components\Toggle::make('estado')

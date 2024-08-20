@@ -37,5 +37,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::apiResource('venta-encabezados', VentaEncabezadoController::class);
-
+        
 });
+
+Route::get('reporte-venta', [VentaEncabezadoController::class, 'reporteVenta'])->name('ventas.export');
+Route::get('venta-print/{id}', [VentaEncabezadoController::class, 'print'])->name('ventas.print');
