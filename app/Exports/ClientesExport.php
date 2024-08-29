@@ -21,8 +21,7 @@ class ClientesExport implements FromCollection, WithHeadings
     public function collection()
     {
         if ($this->cpl == 0) {
-            $clientes = Cliente::whereNull('cpl')
-            ->orderBy('nombres')
+            $clientes = Cliente::orderBy('nombres')
             ->get();
         }else{
             $clientes = Cliente::where('cpl', $this->cpl)

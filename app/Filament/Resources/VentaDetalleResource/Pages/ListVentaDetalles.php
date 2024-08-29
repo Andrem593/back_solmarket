@@ -2,9 +2,12 @@
 
 namespace App\Filament\Resources\VentaDetalleResource\Pages;
 
-use App\Filament\Resources\VentaDetalleResource;
 use Filament\Actions;
+use Maatwebsite\Excel\Excel;
+use App\Exports\VentasDetallesExport;
+use Filament\Pages\Actions\ButtonAction;
 use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\VentaDetalleResource;
 
 class ListVentaDetalles extends ListRecords
 {
@@ -14,6 +17,12 @@ class ListVentaDetalles extends ListRecords
     {
         return [
             Actions\CreateAction::make()->label('Agregar detalle de Venta'),
+            ButtonAction::make('Reporte')
+                ->label('reporte')                
+                ->color('primary')
+                ->action(function (Excel $excel) {
+                    return $excel->download(new VentasDetallesExport, 'ventas_detalles.xlsx');
+                }),
         ];
     }
 }

@@ -26,6 +26,8 @@ class VentaEncabezado extends Model
         'estado',
     ];
 
+    public $with = ['salesDetail', 'client', 'user'];
+
 
     public function salesDetail()
     {

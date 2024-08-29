@@ -39,6 +39,13 @@ class ProductoResource extends Resource
                     ->numeric()
                     ->prefix('$')
                     ->maxValue(42949672.95),
+                Forms\Components\Select::make('bodega')
+                ->options([
+                    'PRINCIPAL' => 'Bodega Principal',
+                    'SECUNDARIA' => 'Bodega Secundaria',
+                ])
+                ->required()
+                ->label('Selecciona la Bodega'),
                 Forms\Components\Toggle::make('estado')
                     ->required()->default(true),
             ]);
@@ -52,12 +59,13 @@ class ProductoResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('descripcion')
                     ->searchable(),
-
                 Tables\Columns\TextColumn::make('stock')
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('precio')
                     ->prefix('$')
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('bodega')
+                    ->searchable(),
                 Tables\Columns\IconColumn::make('estado')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')

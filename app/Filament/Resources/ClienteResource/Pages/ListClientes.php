@@ -28,7 +28,7 @@ class ListClientes extends ListRecords
         $optionsCPL = [];
         foreach ($cpl as $key => $value) {
            if($value->cpl == null){
-               $optionsCPL[0] = 'Sin CPL';
+               $optionsCPL[0] = 'TODOS';
            }else{
                 $optionsCPL[$value->cpl] = $value->cpl;
            }

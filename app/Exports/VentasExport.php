@@ -33,6 +33,8 @@ class VentasExport implements FromCollection, WithHeadings, WithEvents
             return [
                 'Usuario' => $venta->user->name,
                 'Cliente' => $venta->client->nombres,
+                'CPL' => $venta->client->cpl,
+                'Pabellón' => $venta->client->pabellon,
                 'Saldo Anterior' => $venta->saldo_actual,
                 'Saldo Actual' => $venta->saldo,
                 'Subtotal' => $venta->subtotal,
@@ -49,6 +51,8 @@ class VentasExport implements FromCollection, WithHeadings, WithEvents
         return [
             'Usuario',
             'Cliente',
+            'CPL',
+            'Pabellón',
             'Saldo Anterior',
             'Saldo Actual',
             'Subtotal',
@@ -63,11 +67,11 @@ class VentasExport implements FromCollection, WithHeadings, WithEvents
     public function columnFormats(): array
     {
         return [
-            'C' => NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
-            'D' => NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
             'E' => NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
             'F' => NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
             'G' => NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
+            'H' => NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
+            'I' => NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
         ];
     }
 
@@ -95,9 +99,9 @@ class VentasExport implements FromCollection, WithHeadings, WithEvents
                 $lastRow = $sheet->getHighestRow() + 1;
 
                 $sheet->setCellValue('A' . $lastRow, 'Totales');                                
-                $sheet->setCellValue('E' . $lastRow, $this->totals['subtotal']);
-                $sheet->setCellValue('F' . $lastRow, $this->totals['iva']);
-                $sheet->setCellValue('G' . $lastRow, $this->totals['total']);
+                $sheet->setCellValue('G' . $lastRow, $this->totals['subtotal']);
+                $sheet->setCellValue('H' . $lastRow, $this->totals['iva']);
+                $sheet->setCellValue('I' . $lastRow, $this->totals['total']);
             },
         ];
     }

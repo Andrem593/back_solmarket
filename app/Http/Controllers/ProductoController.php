@@ -13,6 +13,7 @@ class ProductoController extends Controller
      */
     public function index(Request $request) : JsonResponse
     {
+        $bodega = auth()->user()->bodega;
         $query = Producto::query();
         $query->when($request->input('nombre'), function ($query, $nombre) {
             $query->where('nombre', 'like', '%' . $nombre . '%');
@@ -20,6 +21,7 @@ class ProductoController extends Controller
         $query->when($request->input('descripcion'), function ($query, $descripcion) {
             $query->where('descripcion', 'like', '%' . $descripcion . '%');
         });
+        $query->where('bodega', $bodega);
         $perPage = $request->input('perPage') ?? 10;
 
         if($perPage === 'all'){

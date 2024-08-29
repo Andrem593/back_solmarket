@@ -75,10 +75,8 @@ class ClienteResource extends Resource
                             ->required()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('cpl')
-                            ->required()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('pabellon')
-                            ->required()
                             ->maxLength(255),
                         Forms\Components\Toggle::make('estado')
                             ->required(),
@@ -88,6 +86,38 @@ class ClienteResource extends Resource
                             ->title('Cliente Actualizado')
                             ->body('El cliente se actualizo con exito.'),
                     ),
+            ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make()
+                ->label('Nuevo')
+                ->modalHeading('Crear Nuevo Cliente')
+                ->modalButton('Crear')
+                ->form([
+                    Forms\Components\TextInput::make('cedula')
+                        ->label('Cédula')
+                        ->required(),
+                    Forms\Components\TextInput::make('nombres')
+                        ->label('Nombres')
+                        ->required(),
+                    Forms\Components\TextInput::make('valor')
+                        ->label('Valor')
+                        ->required(),
+                    Forms\Components\TextInput::make('cpl')
+                        ->label('CPL')
+                        ->required(),
+                    Forms\Components\TextInput::make('pabellon')
+                        ->label('Pabellón')
+                        ->required(),
+                    Forms\Components\Toggle::make('estado')
+                        ->label('Estado')
+                        ->default(true),
+                ])
+                ->successNotification(
+                    Notification::make()
+                        ->success()
+                        ->title('Cliente Creado')
+                        ->body('El cliente se creó con éxito.')
+                ),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

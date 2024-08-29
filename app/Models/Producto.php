@@ -18,6 +18,7 @@ class Producto extends Model
         'stock',
         'precio',
         'estado',
+        'bodega',
     ];
 
     public function saleDetail()

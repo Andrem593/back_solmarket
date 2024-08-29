@@ -94,14 +94,20 @@ class VentaEncabezadoResource extends Resource
                     ->label('Cliente')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('client.cpl')
+                    ->numeric()
+                    ->label('CPL')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('client.pabellon')
+                    ->numeric()
+                    ->label('Pabellón')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('saldo_actual')
                     ->numeric()
                     ->prefix('$')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('saldo')
-                    ->numeric()
-                    ->prefix('$')
-                    ->sortable(),
+                    ->sortable(),                
                 Tables\Columns\TextColumn::make('subtotal')
                     ->numeric()
                     ->prefix('$')
@@ -111,6 +117,10 @@ class VentaEncabezadoResource extends Resource
                     ->prefix('$')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('total')
+                    ->numeric()
+                    ->prefix('$')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('saldo')
                     ->numeric()
                     ->prefix('$')
                     ->sortable(),

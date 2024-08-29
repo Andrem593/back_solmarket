@@ -16,4 +16,9 @@ class Transaccion extends Model
         'transaccion',
         'valor',
     ];
+
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class);
+    }
 }
