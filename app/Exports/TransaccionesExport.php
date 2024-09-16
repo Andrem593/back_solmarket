@@ -20,8 +20,8 @@ class TransaccionesExport implements FromCollection,WithHeadings
         ->get();
         return $transacciones->map(function ($transaccion) {
             return [
-                'Cedula' => $transaccion->cliente->cedula,
-                'Nombres' => $transaccion->cliente->nombres,
+                'Cedula' => $transaccion->cliente->cedula ?? '',
+                'Nombres' => $transaccion->cliente->nombres ?? '',
                 'Transacción' => $transaccion->transaccion,
                 'Valor' => $transaccion->valor,
                 'Fecha' => Carbon::parse($transaccion->created_at)->format('d/m/Y'),

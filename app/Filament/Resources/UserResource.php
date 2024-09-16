@@ -30,13 +30,17 @@ class UserResource extends Resource
                     ->label('Email')
                     ->email()
                     ->required(),
+                Forms\Components\TextInput::make('password')
+                    ->label('Password')
+                    ->password()
+                    ->required(),
                 Forms\Components\Select::make('bodega')
-                ->options([
-                    'PRINCIPAL' => 'Bodega Principal',
-                    'SECUNDARIA' => 'Bodega Secundaria',
-                ])
-                ->required()
-                ->label('Selecciona la Bodega de acceso'),
+                    ->options([
+                        'PRINCIPAL' => 'Bodega Principal',
+                        'SECUNDARIA' => 'Bodega Secundaria',
+                    ])
+                    ->required()
+                    ->label('Selecciona la Bodega de acceso'),
             ]);
     }
 

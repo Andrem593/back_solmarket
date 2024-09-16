@@ -20,7 +20,9 @@ class VentasExport implements FromCollection, WithHeadings, WithEvents
 
     public function collection()
     {
-        $ventas = VentaEncabezado::with('user', 'client')->get();
+        $ventas = VentaEncabezado::with('user', 'client')
+        ->where('estado', 1)
+        ->get();
 
 
         $this->totals = [      
@@ -31,16 +33,16 @@ class VentasExport implements FromCollection, WithHeadings, WithEvents
 
         return $ventas->map(function ($venta) {
             return [
-                'Usuario' => $venta->user->name,
-                'Cliente' => $venta->client->nombres,
-                'CPL' => $venta->client->cpl,
-                'Pabellón' => $venta->client->pabellon,
-                'Saldo Anterior' => $venta->saldo_actual,
-                'Saldo Actual' => $venta->saldo,
-                'Subtotal' => $venta->subtotal,
-                'IVA' => $venta->iva,
-                'Total' => $venta->total,
-                'Fecha' => $venta->fecha,
+                'Usuario' => $venta->user->name ?? '',
+                'Cliente' => $venta->client->nombres ?? '',
+                'CPL' => $venta->client->cpl ?? '',
+                'Pabellón' => $venta->client->pabellon ?? '',
+                'Saldo Anterior' => $venta->saldo_actual ?? '',
+                'Saldo Actual' => $venta->saldo ?? '',
+                'Subtotal' => $venta->subtotal ?? '',
+                'IVA' => $venta->iva ?? '',
+                'Total' => $venta->total ?? '',
+                'Fecha' => $venta->fecha ?? '',
                 'Estado' => $venta->estado ? 'ACTIVO' : 'ANULADO',
             ];
         });
