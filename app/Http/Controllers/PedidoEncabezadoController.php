@@ -16,7 +16,13 @@ class PedidoEncabezadoController extends Controller
      */
     public function index()
     {
-        $orderHeaders = PedidoEncabezado::with('user', 'client', 'ordersDetails.product' )
+        $orderHeaders = PedidoEncabezado::with([
+                'user',
+                'client',
+                'ordersDetails.product' => function ($query) {
+                    $query->withTrashed(); // Incluir productos eliminados suavemente
+                }
+            ])
             ->where('estado', 1)
             ->orderBy('created_at', 'desc')
             ->get()
@@ -85,10 +91,16 @@ class PedidoEncabezadoController extends Controller
                     'message' => 'La solicitud no puede ser procesada porque ya existe un registro de ese cliente.',
                 ], 409); // Usamos 409 Conflict en lugar de 500 Internal Server Error
             }
+            $client = Cliente::findOrFail($request->cliente_id);
+
+            $client->subcategoria_id = $request->subcategoria_id ;
+            $client->centro_costo_id = $request->centro_costo_id ;
 
             $orderHeader = PedidoEncabezado::create($request->all());
 
             $orderHeader->ordersDetails()->createMany($request->productos);
+
+            $client->save();
 
 
             DB::commit();
@@ -157,6 +169,11 @@ class PedidoEncabezadoController extends Controller
             }
 
 
+            $client = Cliente::findOrFail($request->cliente_id);
+
+            $client->subcategoria_id = $request->subcategoria_id ;
+            $client->centro_costo_id = $request->centro_costo_id ;
+
 
             //Actualizo el encabezado
             $orderHeader->user_id = $request->user_id ;
@@ -166,8 +183,12 @@ class PedidoEncabezadoController extends Controller
             $orderHeader->iva = $request->iva ;
             $orderHeader->total = $request->total ;
             $orderHeader->fecha = $request->fecha ;
+            $orderHeader->centro_costo_id = $request->centro_costo_id ;
+            $orderHeader->subcategoria_id = $request->subcategoria_id ;
 
             $orderHeader->save();
+
+            $client->save();
 
             DB::commit();
 
