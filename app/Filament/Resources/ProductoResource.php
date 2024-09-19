@@ -24,31 +24,39 @@ class ProductoResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('nombre')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('descripcion')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('stock')
-                    ->required()
-                    ->numeric()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('precio')
-                    ->numeric()
-                    ->prefix('$')
-                    ->maxValue(42949672.95),
-                Forms\Components\Select::make('bodega')
-                ->options([
-                    'PRINCIPAL' => 'Bodega Principal',
-                    'SECUNDARIA' => 'Bodega Secundaria',
-                ])
-                ->required()
-                ->label('Selecciona la Bodega'),
-                Forms\Components\Toggle::make('estado')
-                    ->required()->default(true),
-            ]);
+            ->schema(
+                function ($record) {                  
+                    return [
+                        Forms\Components\TextInput::make('nombre')
+                            ->required()
+                            ->unique(Producto::class, 'nombre', $record) 
+                            ->validationMessages([
+                                'unique' => 'El nombre del producto ya existe',
+                            ])
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('descripcion')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('stock')
+                            ->required()
+                            ->numeric()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('precio')
+                            ->numeric()
+                            ->prefix('$')
+                            ->maxValue(42949672.95),
+                        Forms\Components\Select::make('bodega')
+                            ->options([
+                                'PRINCIPAL' => 'Bodega Principal',
+                                'SECUNDARIA' => 'Bodega Secundaria',
+                            ])
+                            ->required()
+                            ->label('Selecciona la Bodega'),
+                        Forms\Components\Toggle::make('estado')
+                            ->required()->default(true),
+                    ];
+                }
+            );
     }
 
     public static function table(Table $table): Table

@@ -4,10 +4,11 @@ namespace App\Exports;
 
 use Carbon\Carbon;
 use App\Models\Transaccion;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
-class TransaccionesExport implements FromCollection,WithHeadings
+class TransaccionesAgrupadasExport implements FromCollection,WithHeadings
 {
     public $fechaInicio;
     public $fechaFin;
@@ -24,18 +25,17 @@ class TransaccionesExport implements FromCollection,WithHeadings
     */
     public function collection()
     {
-
-        $transacciones = Transaccion::with('cliente')
-        ->whereBetween('created_at', [$this->fechaInicio, $this->fechaFin])
-        ->orderBy('created_at', 'desc')
+        $transacciones = Transaccion::join('clientes', 'clientes.id', '=', 'transacciones.cliente_id')
+        ->select('cliente_id', DB::raw('SUM(transacciones.valor) as valor'), 'clientes.cedula', 'clientes.nombres', 'clientes.cpl')
+        ->whereBetween('transacciones.created_at', [$this->fechaInicio, $this->fechaFin])
+        ->groupBy('cliente_id', 'clientes.cedula', 'clientes.nombres', 'clientes.cpl')
+        ->orderBy('clientes.nombres')
         ->get();
         return $transacciones->map(function ($transaccion) {
             return [
-                'Cedula' => $transaccion->cliente->cedula ?? '',
-                'Nombres' => $transaccion->cliente->nombres ?? '',
-                'Transacción' => $transaccion->transaccion,
+                'Cedula' => $transaccion->cedula ?? '',
+                'Nombres' => $transaccion->nombres ?? '',                
                 'Valor' => $transaccion->valor,
-                'Fecha' => Carbon::parse($transaccion->created_at)->format('d/m/Y'),
             ];
         });
     }
@@ -45,9 +45,7 @@ class TransaccionesExport implements FromCollection,WithHeadings
         return [
             'Cedula',
             'Nombres',
-            'Transacción',
             'Valor',
-            'Fecha',
         ];
     }
 }

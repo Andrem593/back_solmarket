@@ -47,9 +47,9 @@ class ClienteResource extends Resource
                 Tables\Columns\IconColumn::make('estado')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Fecha de Creación')
+                    ->date()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -95,9 +95,19 @@ class ClienteResource extends Resource
                 ->form([
                     Forms\Components\TextInput::make('cedula')
                         ->label('Cédula')
+                        ->unique('clientes', 'cedula')
+                        ->validationMessages([
+                            'unique' => 'La cédula ya está en uso.',
+                            'required' => 'La cédula es requerida.',
+                        ])
                         ->required(),
                     Forms\Components\TextInput::make('nombres')
                         ->label('Nombres')
+                        ->unique('clientes', 'nombres')
+                        ->validationMessages([
+                            'unique' => 'El nombre ya está en uso.',
+                            'required' => 'El nombre es requerido.',
+                        ])
                         ->required(),
                     Forms\Components\TextInput::make('valor')
                         ->label('Valor')
