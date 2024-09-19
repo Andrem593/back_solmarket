@@ -65,12 +65,37 @@ class ClienteResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()->label('Editar')
                     ->form([
+                        Forms\Components\Select::make('tipo_identificacion')
+                        ->options([
+                            '1' => 'Cédula',  
+                            '2' => 'Pasaporte',
+                        ])
+                        ->required()
+                        ->placeholder('Selecciona el tipo de identificación'),
                         Forms\Components\TextInput::make('cedula')
                             ->required()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('nombres')
                             ->required()
                             ->maxLength(255),
+                        Forms\Components\Select::make('genero')
+                            ->options([
+                                '1' => 'Masculino',  
+                                '2' => 'Femenino',
+                            ])
+                            ->required()
+                            ->placeholder('Selecciona el género'),
+
+                        Forms\Components\Select::make('nacionalidad')
+                            ->options([
+                                'ECUATORIANA' => 'ECUATORIANA',  
+                                'VENEZOLANA' => 'VENEZOLANA',
+                                'COLOMBIANA' => 'COLOMBIANA',
+                                'ALBANES' => 'ALBANES',
+                                'SERBIA' => 'SERBIA',
+                            ])
+                            ->required()
+                            ->placeholder('Selecciona la nacionalidad'),
                         Forms\Components\TextInput::make('valor')
                             ->required()
                             ->maxLength(255),
@@ -93,6 +118,14 @@ class ClienteResource extends Resource
                 ->modalHeading('Crear Nuevo Cliente')
                 ->modalButton('Crear')
                 ->form([
+                    Forms\Components\Select::make('tipo_identificacion')
+                    ->options([
+                        '1' => 'Cédula',	
+                        '2' => 'Pasaporte',
+                    ])
+                    ->required()
+                    ->label('Tipo de identificación')
+                    ->placeholder('Selecciona el tipo de identificación'),
                     Forms\Components\TextInput::make('cedula')
                         ->label('Cédula')
                         ->unique('clientes', 'cedula')
@@ -108,6 +141,28 @@ class ClienteResource extends Resource
                             'unique' => 'El nombre ya está en uso.',
                             'required' => 'El nombre es requerido.',
                         ])
+                        ->required(),
+                    Forms\Components\Select::make('genero')
+                    ->options([
+                        '1' => 'Masculino',	
+                        '2' => 'Femenino',
+                    ])
+                    ->required()
+                    ->label('Género')	
+                    ->placeholder('Selecciona el género'),
+                    Forms\Components\Select::make('nacionalidad')
+                    ->options([
+                        'ECUATORIANA' => 'ECUATORIANA',	
+                        'VENEZOLANA' => 'VENEZOLANA',
+                        'COLOMBIANA' => 'COLOMBIANA',
+                        'ALBANES' => 'ALBANES',
+                        'SERBIA' => 'SERBIA',
+                    ])
+                    ->required()
+                    ->label('Nacionalidad')	
+                    ->placeholder('Selecciona la nacionalidad'),
+                    Forms\Components\TextInput::make('nacionalidad')
+                        ->label('Nacionalidad')
                         ->required(),
                     Forms\Components\TextInput::make('valor')
                         ->label('Valor')

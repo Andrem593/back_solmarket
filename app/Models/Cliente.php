@@ -17,12 +17,37 @@ class Cliente extends Model
     protected $fillable = [
         'id',
         'cedula',
+        'tipo_identificacion',
         'nombres',
+        'genero',
+        'nacionalidad',
         'valor',
         'cpl',
         'pabellon',
         'estado',
+        'subcategoria_id',
+        'centro_costo_id'
     ];
+
+    protected $appends = ['centro_costo','subcategoria'];
+
+    public function getCentroCostoAttribute()
+    {
+        if($this->centro_costo_id){
+            return $this->costCenter->nombre;
+        }else{
+            return "";
+        }
+    }
+
+    public function getSubcategoriaAttribute()
+    {
+        if($this->subcategoria_id){
+            return $this->subcategory->nombre;
+        }else{
+            return "";
+        }
+    }
 
     public function transacciones()
     {
@@ -38,5 +63,15 @@ class Cliente extends Model
     public function getValorAttribute($value)
     {
         return number_format((float) $value, 2, '.', '');
+    }
+
+    public function subcategory()
+    {
+        return $this->belongsTo(Subcategoria::class, 'subcategoria_id');
+    }
+
+    public function costCenter()
+    {
+        return $this->belongsTo(CentroDeCosto::class, 'centro_costo_id');
     }
 }
