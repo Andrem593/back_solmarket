@@ -17,7 +17,10 @@ class Cliente extends Model
     protected $fillable = [
         'id',
         'cedula',
+        'tipo_identificacion',
         'nombres',
+        'genero',
+        'nacionalidad',
         'valor',
         'cpl',
         'pabellon',
