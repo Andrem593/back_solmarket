@@ -33,6 +33,8 @@ class ClientesExport implements FromCollection, WithHeadings
             return [
                 'Cedula' => $cliente->cedula,
                 'Nombres' => $cliente->nombres,
+                'Nacionalidad' => $cliente->nacionalidad,
+                'Género' => $cliente->genero == 1 ? 'Masculino' : ($cliente->genero == 2 ? 'Femenino' : 'Desconocido'),
                 'Valor' => $cliente->valor,
                 'CPL' => $cliente->cpl,
                 'Pabellon' => $cliente->pabellon,
@@ -45,6 +47,8 @@ class ClientesExport implements FromCollection, WithHeadings
         return [
             'Cedula',
             'Nombres',
+            'Nacionalidad',
+            'Género',
             'Valor',
             'CPL',
             'Pabellon',

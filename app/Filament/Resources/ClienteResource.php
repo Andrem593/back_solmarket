@@ -38,6 +38,13 @@ class ClienteResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nombres')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('nacionalidad')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('genero')
+                    ->formatStateUsing(function ($state) {
+                        return $state === 1 ? 'Masculino' : ($state === 2 ? 'Femenino' : 'Desconocido');
+                    })
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('valor')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('cpl')
