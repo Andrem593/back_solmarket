@@ -37,6 +37,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('cambio-stock-producto/{idProduct}/{amount}/{type}', [PedidoEncabezadoController::class, 'changeProductStockValue']);
     Route::post('devolver-cantidad-productos', [PedidoEncabezadoController::class, 'returnQuantityToProductStock']);
 
+    Route::get('eliminar-pedido-detalle/{id}/{idProduct}/{amount}/{type}', [PedidoEncabezadoController::class, 'deleteDetailRequested']);
+
 
     Route::apiResource('venta-encabezados', VentaEncabezadoController::class);
 
