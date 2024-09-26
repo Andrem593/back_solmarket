@@ -212,7 +212,7 @@ class PedidoEncabezadoController extends Controller
 
             DB::beginTransaction();
 
-            $orderHeaders = PedidoEncabezado::findOrFail($id);
+            $orderHeaders = PedidoEncabezado::withTrashed()->findOrFail($id);
 
             $ordersDetails = PedidoDetalle::where('pedido_encabezado_id', $orderHeaders->id )->where('estado' , 1)->get();
 
