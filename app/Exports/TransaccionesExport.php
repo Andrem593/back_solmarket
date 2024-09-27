@@ -33,6 +33,7 @@ class TransaccionesExport implements FromCollection,WithHeadings
             return [
                 'Cedula' => $transaccion->cliente->cedula ?? '',
                 'Nombres' => $transaccion->cliente->nombres ?? '',
+                'CPL' => $transaccion->cliente->cpl ?? '',
                 'Transacción' => $transaccion->transaccion,
                 'Valor' => $transaccion->valor,
                 'Fecha' => Carbon::parse($transaccion->created_at)->format('d/m/Y'),
@@ -45,6 +46,7 @@ class TransaccionesExport implements FromCollection,WithHeadings
         return [
             'Cedula',
             'Nombres',
+            'CPL',
             'Transacción',
             'Valor',
             'Fecha',

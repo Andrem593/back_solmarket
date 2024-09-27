@@ -38,6 +38,7 @@ class ClientesExport implements FromCollection, WithHeadings
                 'Valor' => $cliente->valor,
                 'CPL' => $cliente->cpl,
                 'Pabellon' => $cliente->pabellon,
+                'ala'=> $cliente->ala,
             ];
         });
     }
@@ -52,6 +53,7 @@ class ClientesExport implements FromCollection, WithHeadings
             'Valor',
             'CPL',
             'Pabellon',
+            'ala',
         ];
     }
 }

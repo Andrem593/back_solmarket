@@ -25,6 +25,7 @@ class Cliente extends Model
         'cpl',
         'pabellon',
         'estado',
+        'ala',
         'subcategoria_id',
         'centro_costo_id'
     ];

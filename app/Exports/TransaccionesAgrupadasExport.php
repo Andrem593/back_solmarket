@@ -34,7 +34,8 @@ class TransaccionesAgrupadasExport implements FromCollection,WithHeadings
         return $transacciones->map(function ($transaccion) {
             return [
                 'Cedula' => $transaccion->cedula ?? '',
-                'Nombres' => $transaccion->nombres ?? '',                
+                'Nombres' => $transaccion->nombres ?? '',        
+                'CPL' => $transaccion->cpl ?? '',    
                 'Valor' => $transaccion->valor,
             ];
         });
@@ -45,6 +46,7 @@ class TransaccionesAgrupadasExport implements FromCollection,WithHeadings
         return [
             'Cedula',
             'Nombres',
+            'CPL',
             'Valor',
         ];
     }

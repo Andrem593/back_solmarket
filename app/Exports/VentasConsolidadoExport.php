@@ -56,9 +56,9 @@ class VentasConsolidadoExport implements FromCollection, WithHeadings
             $transacciones = $cliente->transacciones->sum('valor');
             $saldoProvisali = isset($saldoProvisali[$cliente->id]) ? $saldoProvisali[$cliente->id]->valor : 0;
             $saldo = $transacciones + $saldoProvisali - $ventas;
-            if ($saldo < 0) {
-                $saldo = 0;
-            }  
+            // if ($saldo < 0) {
+            //     $saldo = 0;
+            // }  
             return [
                 'id' => $cliente->id,
                 'Cédula' => $cliente->cedula,
@@ -87,7 +87,7 @@ class VentasConsolidadoExport implements FromCollection, WithHeadings
                 'Saldo Provisali' => $clienteSaldo->valor ?? 0,
                 'Transacciones' => 0,
                 'Ventas' => 0,
-                'Saldo' => $clienteSaldo->cliente->valor ?? 0,
+                'Saldo' => $clienteSaldo->valor ?? 0,
             ]);
         });
 

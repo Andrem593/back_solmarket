@@ -42,7 +42,7 @@ class ClienteResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('genero')
                     ->formatStateUsing(function ($state) {
-                        return $state === 1 ? 'Masculino' : ($state === 2 ? 'Femenino' : 'Desconocido');
+                        return $state === 1 ?'Masculino' : ($state === 2 ?'Femenino' : 'Desconocido');
                     })
                     ->searchable(),
                 Tables\Columns\TextColumn::make('valor')
@@ -50,6 +50,8 @@ class ClienteResource extends Resource
                 Tables\Columns\TextColumn::make('cpl')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('pabellon')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('ala')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('estado')
                     ->boolean(),
@@ -73,12 +75,12 @@ class ClienteResource extends Resource
                 Tables\Actions\EditAction::make()->label('Editar')
                     ->form([
                         Forms\Components\Select::make('tipo_identificacion')
-                        ->options([
-                            '1' => 'Cédula',  
-                            '2' => 'Pasaporte',
-                        ])
-                        ->required()
-                        ->placeholder('Selecciona el tipo de identificación'),
+                            ->options([
+                                '1' => 'Cédula',
+                                '2' => 'Pasaporte',
+                            ])
+                            ->required()
+                            ->placeholder('Selecciona el tipo de identificación'),
                         Forms\Components\TextInput::make('cedula')
                             ->required()
                             ->maxLength(255),
@@ -87,7 +89,7 @@ class ClienteResource extends Resource
                             ->maxLength(255),
                         Forms\Components\Select::make('genero')
                             ->options([
-                                '1' => 'Masculino',  
+                                '1' => 'Masculino',
                                 '2' => 'Femenino',
                             ])
                             ->required()
@@ -95,7 +97,7 @@ class ClienteResource extends Resource
 
                         Forms\Components\Select::make('nacionalidad')
                             ->options([
-                                'ECUATORIANA' => 'ECUATORIANA',  
+                                'ECUATORIANA' => 'ECUATORIANA',
                                 'VENEZOLANA' => 'VENEZOLANA',
                                 'COLOMBIANA' => 'COLOMBIANA',
                                 'ALBANES' => 'ALBANES',
@@ -110,6 +112,8 @@ class ClienteResource extends Resource
                             ->maxLength(255),
                         Forms\Components\TextInput::make('pabellon')
                             ->maxLength(255),
+                        Forms\Components\TextInput::make('ala')
+                            ->maxLength(255),
                         Forms\Components\Toggle::make('estado')
                             ->required(),
                     ])->successNotification(
@@ -121,75 +125,75 @@ class ClienteResource extends Resource
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                ->label('Nuevo')
-                ->modalHeading('Crear Nuevo Cliente')
-                ->modalButton('Crear')
-                ->form([
-                    Forms\Components\Select::make('tipo_identificacion')
-                    ->options([
-                        '1' => 'Cédula',	
-                        '2' => 'Pasaporte',
+                    ->label('Nuevo')
+                    ->modalHeading('Crear Nuevo Cliente')
+                    ->modalButton('Crear')
+                    ->form([
+                        Forms\Components\Select::make('tipo_identificacion')
+                            ->options([
+                                '1' => 'Cédula',
+                                '2' => 'Pasaporte',
+                            ])
+                            ->required()
+                            ->label('Tipo de identificación')
+                            ->placeholder('Selecciona el tipo de identificación'),
+                        Forms\Components\TextInput::make('cedula')
+                            ->label('Cédula')
+                            ->unique('clientes', 'cedula')
+                            ->validationMessages([
+                                'unique' => 'La cédula ya está en uso.',
+                                'required' => 'La cédula es requerida.',
+                            ])
+                            ->required(),
+                        Forms\Components\TextInput::make('nombres')
+                            ->label('Nombres')
+                            ->unique('clientes', 'nombres')
+                            ->validationMessages([
+                                'unique' => 'El nombre ya está en uso.',
+                                'required' => 'El nombre es requerido.',
+                            ])
+                            ->required(),
+                        Forms\Components\Select::make('genero')
+                            ->options([
+                                '1' => 'Masculino',
+                                '2' => 'Femenino',
+                            ])
+                            ->required()
+                            ->label('Género')
+                            ->placeholder('Selecciona el género'),
+                        Forms\Components\Select::make('nacionalidad')
+                            ->options([
+                                'ECUATORIANA' => 'ECUATORIANA',
+                                'VENEZOLANA' => 'VENEZOLANA',
+                                'COLOMBIANA' => 'COLOMBIANA',
+                                'ALBANES' => 'ALBANES',
+                                'SERBIA' => 'SERBIA',
+                            ])
+                            ->required()
+                            ->label('Nacionalidad')
+                            ->placeholder('Selecciona la nacionalidad'),
+                        Forms\Components\TextInput::make('nacionalidad')
+                            ->label('Nacionalidad')
+                            ->required(),
+                        Forms\Components\TextInput::make('valor')
+                            ->label('Valor')
+                            ->required(),
+                        Forms\Components\TextInput::make('cpl')
+                            ->label('CPL')
+                            ->required(),
+                        Forms\Components\TextInput::make('pabellon')
+                            ->label('Pabellón')
+                            ->required(),
+                        Forms\Components\Toggle::make('estado')
+                            ->label('Estado')
+                            ->default(true),
                     ])
-                    ->required()
-                    ->label('Tipo de identificación')
-                    ->placeholder('Selecciona el tipo de identificación'),
-                    Forms\Components\TextInput::make('cedula')
-                        ->label('Cédula')
-                        ->unique('clientes', 'cedula')
-                        ->validationMessages([
-                            'unique' => 'La cédula ya está en uso.',
-                            'required' => 'La cédula es requerida.',
-                        ])
-                        ->required(),
-                    Forms\Components\TextInput::make('nombres')
-                        ->label('Nombres')
-                        ->unique('clientes', 'nombres')
-                        ->validationMessages([
-                            'unique' => 'El nombre ya está en uso.',
-                            'required' => 'El nombre es requerido.',
-                        ])
-                        ->required(),
-                    Forms\Components\Select::make('genero')
-                    ->options([
-                        '1' => 'Masculino',	
-                        '2' => 'Femenino',
-                    ])
-                    ->required()
-                    ->label('Género')	
-                    ->placeholder('Selecciona el género'),
-                    Forms\Components\Select::make('nacionalidad')
-                    ->options([
-                        'ECUATORIANA' => 'ECUATORIANA',	
-                        'VENEZOLANA' => 'VENEZOLANA',
-                        'COLOMBIANA' => 'COLOMBIANA',
-                        'ALBANES' => 'ALBANES',
-                        'SERBIA' => 'SERBIA',
-                    ])
-                    ->required()
-                    ->label('Nacionalidad')	
-                    ->placeholder('Selecciona la nacionalidad'),
-                    Forms\Components\TextInput::make('nacionalidad')
-                        ->label('Nacionalidad')
-                        ->required(),
-                    Forms\Components\TextInput::make('valor')
-                        ->label('Valor')
-                        ->required(),
-                    Forms\Components\TextInput::make('cpl')
-                        ->label('CPL')
-                        ->required(),
-                    Forms\Components\TextInput::make('pabellon')
-                        ->label('Pabellón')
-                        ->required(),
-                    Forms\Components\Toggle::make('estado')
-                        ->label('Estado')
-                        ->default(true),
-                ])
-                ->successNotification(
-                    Notification::make()
-                        ->success()
-                        ->title('Cliente Creado')
-                        ->body('El cliente se creó con éxito.')
-                ),
+                    ->successNotification(
+                        Notification::make()
+                            ->success()
+                            ->title('Cliente Creado')
+                            ->body('El cliente se creó con éxito.')
+                    ),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

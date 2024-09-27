@@ -84,8 +84,8 @@ class VentaEncabezadoController extends Controller
             $saleHeader->salesDetail()->createMany($request->productos);
 
             $client = Cliente::findOrFail($saleHeader->cliente_id);
-            $client->subcategoria_id = $request->subcategoria_id ;
-            $client->centro_costo_id = $request->centro_costo_id ;
+            // $client->subcategoria_id = $request->subcategoria_id ;
+            // $client->centro_costo_id = $request->centro_costo_id ;
 
             //Verificar si es mayor el total consultar
 
@@ -162,8 +162,9 @@ class VentaEncabezadoController extends Controller
     {
         $encabezado = VentaEncabezado::with('client')->find($id);
 
-        $detalle = VentaDetalle::with('product')
-        ->where('venta_encabezado_id', $id)->get();
+        $detalle = VentaDetalle::with(['product' => function($query) {
+            $query->withTrashed(); // Incluir productos eliminados con SoftDelete
+        }])->where('venta_encabezado_id', $id)->get();
 
         return view('print', compact('encabezado', 'detalle'));
     }

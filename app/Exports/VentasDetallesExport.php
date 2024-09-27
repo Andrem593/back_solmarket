@@ -13,8 +13,9 @@ class VentasDetallesExport implements FromCollection, WithHeadings
     */
     public function collection()
     {
-        $ventas_detalles = VentaDetalle::with('saleHeader', 'product')
-        ->get();
+        $ventas_detalles = VentaDetalle::with(['saleHeader', 'product' => function($query) {
+            $query->withTrashed(); // Incluir productos eliminados con SoftDelete
+        }])->get();
 
 
         return $ventas_detalles->map(function ($venta_detalle) {   
