@@ -8,6 +8,16 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 
 class VentasDetallesExport implements FromCollection, WithHeadings
 {
+    public $fechaInicio;
+    public $fechaFin;
+
+
+    public function __construct($fechaInicio, $fechaFin)
+    {
+        $this->fechaInicio = $fechaInicio;
+        $this->fechaFin = $fechaFin;
+    }
+
     /**
     * @return \Illuminate\Support\Collection
     */
@@ -15,7 +25,11 @@ class VentasDetallesExport implements FromCollection, WithHeadings
     {
         $ventas_detalles = VentaDetalle::with(['saleHeader', 'product' => function($query) {
             $query->withTrashed(); // Incluir productos eliminados con SoftDelete
-        }])->get();
+        }])
+        ->whereHas('saleHeader', function ($query) {
+            $query->whereBetween('fecha', [$this->fechaInicio, $this->fechaFin]);
+        })
+        ->get();
 
 
         return $ventas_detalles->map(function ($venta_detalle) {   
