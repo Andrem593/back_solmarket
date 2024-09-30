@@ -15,13 +15,28 @@ class ListVentaDetalles extends ListRecords
 
     protected function getHeaderActions(): array
     {
+        $fechaIncio = now()->format('Y-m-d');
+        $fechaFin = now()->format('Y-m-d');
+
         return [
             Actions\CreateAction::make()->label('Agregar detalle de Venta'),
-            ButtonAction::make('Reporte')
-                ->label('reporte')                
-                ->color('primary')
-                ->action(function (Excel $excel) {
-                    return $excel->download(new VentasDetallesExport, 'ventas_detalles.xlsx');
+            Actions\Action::make('Reporte')
+                ->label('Reporte Detalles Venta')
+                ->modalHeading('Selecciona el rango de fechas')
+                ->form([
+                    \Filament\Forms\Components\DatePicker::make('fechaInicio')
+                        ->label('Fecha Inicio')
+                        ->default($fechaIncio)
+                        ->required(),
+                    \Filament\Forms\Components\DatePicker::make('fechaFin')
+                        ->label('Fecha Fin')
+                        ->default($fechaFin)
+                        ->required(),
+                ])
+                ->action(function (Excel $excel, array $data) {
+                    $fechaIncio = $data['fechaInicio'];
+                    $fechaFin = $data['fechaFin'];
+                    return $excel->download(new VentasDetallesExport($fechaIncio, $fechaFin), 'ventas_detalles.xlsx');
                 }),
         ];
     }
