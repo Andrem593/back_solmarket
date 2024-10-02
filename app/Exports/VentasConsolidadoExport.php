@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use App\Models\Cliente;
 use App\Models\Transaccion;
+use Carbon\Carbon;
 use App\Models\VentaEncabezado;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -17,8 +18,8 @@ class VentasConsolidadoExport implements FromCollection, WithHeadings
 
     public function __construct($fechaInicio, $fechaFin)
     {
-        $this->fechaInicio = $fechaInicio;
-        $this->fechaFin = $fechaFin;
+        $this->fechaInicio = Carbon::parse($fechaInicio)->startOfDay();
+        $this->fechaFin = Carbon::parse($fechaFin)->endOfDay();
     }
 
     /**
