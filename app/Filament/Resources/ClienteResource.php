@@ -98,6 +98,7 @@ class ClienteResource extends Resource
                         Forms\Components\Select::make('nacionalidad')
                             ->options([
                                 'ECUATORIANA' => 'ECUATORIANA',
+                                'PERUANA' => 'PERUANA',
                                 'VENEZOLANA' => 'VENEZOLANA',
                                 'COLOMBIANA' => 'COLOMBIANA',
                                 'ALBANES' => 'ALBANES',
@@ -164,6 +165,7 @@ class ClienteResource extends Resource
                         Forms\Components\Select::make('nacionalidad')
                             ->options([
                                 'ECUATORIANA' => 'ECUATORIANA',
+                                'PERUANA' => 'PERUANA',
                                 'VENEZOLANA' => 'VENEZOLANA',
                                 'COLOMBIANA' => 'COLOMBIANA',
                                 'ALBANES' => 'ALBANES',
