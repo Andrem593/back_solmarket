@@ -36,10 +36,10 @@ class Transaccion extends Model
             ->useLogName('transaccion')  // Nombre del log (puedes cambiarlo)
             ->setDescriptionForEvent(function(string $eventName) {
                 return match($eventName) {
-                    'created' => 'Cliente ha sido creado',
-                    'updated' => 'Cliente ha sido actualizado',
-                    'deleted' => 'Cliente ha sido eliminado',
-                    default => "Cliente ha tenido una acción: {$eventName}",
+                    'created' => 'Transaccion ha sido creado',
+                    'updated' => 'Transaccion ha sido actualizado',
+                    'deleted' => 'Transaccion ha sido eliminado',
+                    default => "Transaccion ha tenido una acción: {$eventName}",
                 };
             });
     }

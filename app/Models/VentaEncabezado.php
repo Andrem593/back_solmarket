@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class VentaEncabezado extends Model
 {
@@ -33,6 +35,33 @@ class VentaEncabezado extends Model
 
 
     protected $appends = ['centro_costo','subcategoria'];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([
+                'user_id',
+                'cliente_id',
+                'saldo_actual',
+                'saldo',
+                'subtotal',
+                'iva',
+                'total',
+                'fecha',
+                'estado',
+                'subcategoria_id',
+                'centro_costo_id'
+            ])  // Atributos que deseas registrar
+            ->useLogName('venta_encabezado')  // Nombre del log (puedes cambiarlo)
+            ->setDescriptionForEvent(function(string $eventName) {
+                return match($eventName) {
+                    'created' => 'Venta Encabezado ha sido creado',
+                    'updated' => 'Venta Encabezado ha sido actualizado',
+                    'deleted' => 'Venta Encabezado ha sido eliminado',
+                    default => "Venta Encabezado ha tenido una acción: {$eventName}",
+                };
+            });
+    }
 
     public function getCentroCostoAttribute()
     {

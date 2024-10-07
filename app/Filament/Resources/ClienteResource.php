@@ -8,6 +8,7 @@ use App\Models\Cliente;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\Action;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ClienteResource\Pages;
@@ -123,6 +124,7 @@ class ClienteResource extends Resource
                             ->title('Cliente Actualizado')
                             ->body('El cliente se actualizo con exito.'),
                     ),
+                    // Action::make('activities')->label('Historial')->icon('heroicon-o-clock')->url(fn ($record) => ClienteResource::getUrl('activities', ['record' => $record]))
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
@@ -215,6 +217,7 @@ class ClienteResource extends Resource
     {
         return [
             'index' => Pages\ListClientes::route('/'),
+            'activities' => Pages\ListClienteActivities::route('/{record}/activities'),
             // 'create' => Pages\CreateCliente::route('/create'),
             // 'edit' => Pages\EditCliente::route('/{record}/edit'),
         ];
