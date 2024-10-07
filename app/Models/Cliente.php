@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Models\Transaccion;
 use App\Models\VentaEncabezado;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -13,6 +15,7 @@ class Cliente extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use LogsActivity;
 
     protected $fillable = [
         'id',
@@ -31,6 +34,34 @@ class Cliente extends Model
     ];
 
     protected $appends = ['centro_costo','subcategoria'];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([
+                'cedula',
+                'tipo_identificacion',
+                'nombres',
+                'genero',
+                'nacionalidad',
+                'valor',
+                'cpl',
+                'pabellon',
+                'estado',
+                'ala',
+                'subcategoria_id',
+                'centro_costo_id'
+                ])  // Atributos que deseas registrar
+            ->useLogName('cliente')  // Nombre del log (puedes cambiarlo)
+            ->setDescriptionForEvent(function(string $eventName) {
+                return match($eventName) {
+                    'created' => 'Cliente ha sido creado',
+                    'updated' => 'Cliente ha sido actualizado',
+                    'deleted' => 'Cliente ha sido eliminado',
+                    default => "Cliente ha tenido una acción: {$eventName}",
+                };
+            });
+    }
 
     public function getCentroCostoAttribute()
     {

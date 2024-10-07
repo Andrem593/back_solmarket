@@ -10,7 +10,7 @@ class VentaEncabezado extends Model
 {
     use HasFactory;
     use SoftDeletes;
-
+    use LogsActivity;
 
     protected $table = 'ventas_encabezados';
 
